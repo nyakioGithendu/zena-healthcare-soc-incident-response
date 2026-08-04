@@ -30,6 +30,13 @@ regulatory notification.
 - ServiceNow
 - UK GDPR / ICO 72-hour breach notification process
 
+## Environment
+
+- **Cloud platform:** Azure (Log Analytics workspace + Sentinel)
+- **SIEM:** Microsoft Sentinel
+- **ITSM/ticketing:** ServiceNow (dev instance)
+- **Threat intel enrichment:** VirusTotal, AbuseIPDB, ANY.RUN
+
 ## Investigation Timeline
 
 _To be completed as the investigation progresses — see [incident-timeline.md](./incident-timeline.md) for the full chronological account._
