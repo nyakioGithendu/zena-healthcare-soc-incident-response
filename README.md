@@ -2,7 +2,7 @@
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
-> **Simulation.** ZENA Healthcare 
+> ⚠️ **This is a simulated exercise.** ZENA Healthcare is a fictional
 > organization created for training purposes. No real patient data,
 > systems, or breach occurred. This project demonstrates SOC analyst
 > skills using Microsoft Sentinel, Defender XDR, and MITRE ATT&CK
@@ -58,8 +58,8 @@ regulatory notification.
 
 **Phase 2 — Alert Triage**
 - Validated the Sentinel feed before triaging: found 277 ingested rows
-  against 275 unique Alert IDs — a connector duplication issue, resolved
-  before calculating any metrics.
+  against 275 unique Alert IDs — a connector duplication issue
+  (`AL-1048`, `AL-1049`), resolved before calculating any metrics.
 - Cross-checked the "portal DDoS" theory against source IP data: 22 of
   30 high-request-rate alerts traced to an internal load-testing
   address — confirmed false positive, not an external attack.
@@ -72,6 +72,18 @@ regulatory notification.
 - Identified a cross-SIEM discrepancy: Sentinel and Splunk disagree on
   whether one outbound transfer to a suspect IP was blocked or allowed
   — flagged as an open item for the threat-hunting phase.
+- **Ingestion pipeline troubleshooting:** built a custom log ingestion
+  pipeline end-to-end using Azure Data Collection Rules, a service
+  principal (App Registration + role-based access), and the Logs
+  Ingestion REST API rather than relying on the wizard's file-upload
+  path. Along the way, diagnosed and resolved an OAuth client-secret
+  mismatch, a workspace-naming mix-up, and — most notably — a case
+  where Sentinel's reserved `TimeGenerated` column was found to reflect
+  ingestion time rather than true event time, despite a DCR
+  transformation intended to correct it (a known inconsistency on
+  Analytics-tier custom tables). Resolved by preserving the original
+  event timestamp under a separate field (`AlertTimeGenerated`) and
+  using it for all chronological analysis instead.
 
 **Phase 3 — Identity Investigation (in progress)**
 - Investigating the `j.okeefe` account compromise via Entra ID sign-in
