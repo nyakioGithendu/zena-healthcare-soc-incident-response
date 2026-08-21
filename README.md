@@ -1,4 +1,4 @@
-# ZENA Healthcare SOC Incident Response — Simulation Project
+# ZENA Healthcare SOC Incident Response  Project
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
