@@ -48,7 +48,7 @@ regulatory notification.
 | Phase 0 — Tooling & environment setup | ✅ Complete |
 | Phase 1 — Business onboarding & regulatory knowledge checks | ✅ Complete |
 | Phase 2 — SIEM data validation & alert triage | ✅ Complete |
-| Phase 3 — Cloud identity investigation | 🔄 In progress |
+| Phase 3 — Cloud identity investigation | ✅ Complete |
 | Phase 4 — Malware & threat intelligence analysis | ⬜ Not started |
 | Phase 5 — Threat hunting & MITRE ATT&CK mapping | ⬜ Not started |
 | Phase 6 — Confirmed-incident response & ServiceNow | ⬜ Not started |
@@ -85,18 +85,41 @@ regulatory notification.
   event timestamp under a separate field (`AlertTimeGenerated`) and
   using it for all chronological analysis instead.
 
-**Phase 3 — Identity Investigation (in progress)**
-- Investigating the `j.okeefe` account compromise via Entra ID sign-in
-  logs: an MFA-fatigue pattern followed by an impossible-travel sign-in.
-- Quantifying the exact time gap between the two sign-ins to prove the
-  travel was physically impossible, rather than relying on the
-  system's flag alone.
-- Distinguishing this genuine compromise from a second, superficially
-  similar "impossible travel" flag on a different account — verifying
-  independently rather than taking the prior analyst's handover note at
-  face value.
-- Investigating an anomalous privilege grant on a service account
-  (`SVC-epr-sync`) for a possible link to the same compromise.
+**Phase 3 — Cloud Identity Investigation**
+- Confirmed the `j.okeefe` account compromise via Entra ID sign-in logs:
+  a 9-prompt MFA-fatigue (push-bombing) burst over 36 minutes, followed
+  by a successful sign-in "after repeated MFA prompts" from Rotterdam,
+  NL — the same night as the account's last legitimate Manchester
+  sign-in.
+- **Quantified the impossible-travel finding directly in KQL**, using
+  `prev()`/`datetime_diff()` to calculate the exact gap between the
+  legitimate and compromised sign-ins: **46 minutes** across ~600km —
+  physically impossible by any mode of travel, turning a system-flagged
+  alert into a mathematically proven finding.
+- Independently verified a second, superficially similar "impossible
+  travel" flag on `a.shah` and confirmed it as a genuine false
+  positive — `RiskState: dismissed`, normal MFA satisfaction, no
+  fatigue pattern, no follow-on suspicious activity — rather than
+  accepting the prior analyst's handover note at face value.
+- Resolved an open question from the handover notes: `SVC-epr-sync`
+  (normally a certificate-based, non-interactive automation account)
+  showed an anomalous interactive password sign-in from the same
+  Rotterdam IP as the `j.okeefe` compromise, immediately followed by an
+  unauthorized **Helpdesk Administrator** role grant — clear evidence of
+  privilege escalation, ~26 hours after the initial compromise.
+- **Cross-account correlation:** the source IP `45.137.21.88` links the
+  `j.okeefe` compromise, the `SVC-epr-sync` privilege escalation, *and*
+  the `IMG-WS-07` workstation intrusion from Phase 2 — confirming one
+  coordinated attack campaign, not several unrelated incidents.
+- Produced a board-ready Identity Investigation Report (executive
+  summary, timeline, risk assessment, affected-user breakdown, and
+  recommendations) for the SOC Manager.
+- Repeated the same `TimeGenerated`-vs-ingestion-time issue from Phase
+  2's pipeline in this table too — resolved the same way, by querying
+  the preserved event-time field instead of the reserved column.
+- Began an initial MITRE ATT&CK mapping across the Phase 2–3 findings
+  (Credential Access, Privilege Escalation, Command and Control,
+  Exfiltration) ahead of the formal mapping in Phase 5.
 
 ## Investigation Timeline
 
@@ -108,7 +131,20 @@ Full triage register and methodology in [/evidence](./evidence).
 
 ## MITRE ATT&CK Mapping
 
-_To be completed as the kill chain is confirmed in later phases._
+Initial mapping drafted from Phase 2–3 findings; formal kill-chain
+mapping to be finalized in Phase 5.
+
+| Finding | Tactic | Technique | ID |
+|---|---|---|---|
+| MFA push-bombing | Credential Access | MFA Request Generation | T1621 |
+| Impossible-travel sign-in | Initial Access | Valid Accounts | T1078 |
+| Sign-in via anonymising proxy | Defense Evasion | External Proxy | T1090.002 |
+| SVC-epr-sync interactive sign-in | Privilege Escalation | Valid Accounts: Cloud Accounts | T1078.004 |
+| Helpdesk Admin role grant | Privilege Escalation | Account Manipulation | T1098.003 |
+| Encoded PowerShell on IMG-WS-07 | Execution | PowerShell | T1059.001 |
+| LSASS access on IMG-WS-07 | Credential Access | OS Credential Dumping | T1003.001 |
+| Shared C2 IP across 3 findings | Command and Control | Application Layer Protocol | T1071 |
+| Attempted outbound transfer | Exfiltration | Exfiltration Over C2 Channel | T1041 |
 
 ## KQL Queries
 
