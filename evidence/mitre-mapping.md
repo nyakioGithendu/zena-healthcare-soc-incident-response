@@ -1,4 +1,4 @@
-# ZENA Healthcare Incident — MITRE ATT&CK Mapping
+# ZENA Healthcare Incident  MITRE ATT&CK Mapping
 
 > **Status:** Initial mapping, compiled from confirmed Phase 2 (Alert Triage) and Phase 3 (Identity Investigation) findings. Formal validation and any additional techniques from endpoint/network hunting will be added in Phase 5.
 >
