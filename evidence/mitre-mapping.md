@@ -1,4 +1,4 @@
-# ZENA Healthcare Incident — MITRE ATT&CK Mapping
+# ZENA Healthcare Incident  MITRE ATT&CK Mapping
 
 > **Status:** Initial mapping, compiled from confirmed Phase 2 (Alert Triage) and Phase 3 (Identity Investigation) findings. Formal validation and any additional techniques from endpoint/network hunting will be added in Phase 5.
 >
@@ -58,13 +58,13 @@ The single strongest piece of evidence in this investigation is that **source IP
 2. The compromised sign-in and subsequent EPR/portal access for `j.okeefe` (Phase 3)
 3. The anomalous interactive sign-in and privilege escalation for `SVC-epr-sync` (Phase 3)
 
-Each of these was identified separately, using different log sources (Defender/network logs, and two different Entra ID account investigations) — the correlation was not assumed, it was discovered by cross-referencing IP addresses across independently-triaged findings. This is what elevates the incident from "an endpoint alert and two account alerts" to "one attacker, one campaign, three footholds."
+Each of these was identified separately, using different log sources (Defender/network logs, and two different Entra ID account investigations) , the correlation was not assumed, it was discovered by cross-referencing IP addresses across independently-triaged findings. This is what elevates the incident from "an endpoint alert and two account alerts" to "one attacker, one campaign, three footholds."
 
 ---
 
 ## Open Items for Phase 5 (Formal Threat Hunting)
 
-- Confirm the initial access vector into `IMG-WS-07` — is it linked to the phishing alert in the Phase 2 kill chain, or a separate entry point?
+- Confirm the initial access vector into `IMG-WS-07` ,is it linked to the phishing alert in the Phase 2 kill chain, or a separate entry point?
 - Resolve the Sentinel-vs-Splunk discrepancy on whether the outbound transfer was actually blocked.
 - Determine whether any data confirmed left the network, and if so, what was exfiltrated (relevant to EPR/PACS record scope).
 - Confirm whether Helix Imaging (PACS supplier) activity is connected to the same campaign (per their inbound query, ticket `INC0010051`).

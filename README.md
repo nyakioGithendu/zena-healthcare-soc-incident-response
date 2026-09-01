@@ -1,4 +1,4 @@
-# ZENA Healthcare SOC Incident Response — Simulation Project
+# ZENA Healthcare SOC Incident Response  Project
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
@@ -19,7 +19,7 @@ the 72-hour breach notification window.
 
 ## My Role
 
-Senior SOC Analyst (simulated) — responsible for alert triage, threat
+Senior SOC Analyst (simulated) , responsible for alert triage, threat
 hunting, incident escalation, and coordinating the response through to
 regulatory notification.
 
@@ -58,11 +58,11 @@ regulatory notification.
 
 **Phase 2 — Alert Triage**
 - Validated the Sentinel feed before triaging: found 277 ingested rows
-  against 275 unique Alert IDs — a connector duplication issue
+  against 275 unique Alert IDs, a connector duplication issue
   (`AL-1048`, `AL-1049`), resolved before calculating any metrics.
 - Cross-checked the "portal DDoS" theory against source IP data: 22 of
   30 high-request-rate alerts traced to an internal load-testing
-  address — confirmed false positive, not an external attack.
+  address, confirmed false positive, not an external attack.
 - Full triage of the 275-alert backlog produced a 31.3% true-positive
   rate. Within that, distinguished 68 routine/low-severity true
   positives from **18 alerts forming a single, unbroken attack
@@ -77,7 +77,7 @@ regulatory notification.
   principal (App Registration + role-based access), and the Logs
   Ingestion REST API rather than relying on the wizard's file-upload
   path. Along the way, diagnosed and resolved an OAuth client-secret
-  mismatch, a workspace-naming mix-up, and — most notably — a case
+  mismatch, a workspace-naming mix-up, and, most notably, a case
   where Sentinel's reserved `TimeGenerated` column was found to reflect
   ingestion time rather than true event time, despite a DCR
   transformation intended to correct it (a known inconsistency on
@@ -115,7 +115,7 @@ regulatory notification.
   summary, timeline, risk assessment, affected-user breakdown, and
   recommendations) for the SOC Manager.
 - Repeated the same `TimeGenerated`-vs-ingestion-time issue from Phase
-  2's pipeline in this table too — resolved the same way, by querying
+  2's pipeline in this table too, resolved the same way, by querying
   the preserved event-time field instead of the reserved column.
 - Began an initial MITRE ATT&CK mapping across the Phase 2–3 findings
   (Credential Access, Privilege Escalation, Command and Control,
