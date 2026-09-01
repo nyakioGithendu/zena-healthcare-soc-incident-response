@@ -21,10 +21,10 @@ Source data: `zena_defender_endpoint_alerts.csv`, `zena_defender_identity_alerts
 
 ## Enrichment Results
 
-**VirusTotal — `sync-update-cdn.net`**
+**VirusTotal-`sync-update-cdn.net`**
 0/90 security vendors flagged the domain. Consistent with newly-registered or first-use attacker infrastructure- absence of detections reflects absence of prior reporting, not evidence of benign intent.
 
-**AbuseIPDB — `45.137.21.88`**
+**AbuseIPDB-`45.137.21.88`**
 0% abuse confidence score, no prior reports. Same interpretation as above-confidence in this IOC's malicious nature rests on first-party evidence (decoded payload, Defender alerts, beacon pattern, cross-account correlation), not third-party reputation history.
 
 ---
