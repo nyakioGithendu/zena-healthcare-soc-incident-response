@@ -45,12 +45,12 @@ Data staged to archive → Attempted exfiltration → C2 beaconing
 | 9 | Helpdesk Administrator role assigned to SVC-epr-sync four minutes after the anomalous sign-in, from the same IP | Phase 3 | Privilege Escalation | Account Manipulation: Additional Cloud Roles | T1098.003 |
 | 10 | Movement toward EPR application tier and large-volume EPR record query, part of the confirmed kill chain | Phase 2 | Lateral Movement / Collection | Remote Services / Data from Information Repositories | T1021 / T1213 |
 | 11 | Data staged to an archive file ahead of transfer | Phase 2 | Collection | Data Staged | T1074 |
-| 12 | Attempted outbound transfer to `45.137.21.88`, disputed between Sentinel ("blocked") and Splunk ("allowed") — unresolved discrepancy | Phase 2 | Exfiltration | Exfiltration Over C2 Channel | T1041 |
+| 12 | Attempted outbound transfer to `45.137.21.88`, disputed between Sentinel ("blocked") and Splunk ("allowed")-unresolved discrepancy | Phase 2 | Exfiltration | Exfiltration Over C2 Channel | T1041 |
 | 13 | Beaconing traffic to `45.137.21.88` at regular intervals, consistent with automated C2 rather than human browsing | Phase 2 | Command and Control | Application Layer Protocol | T1071 |
 
 ---
 
-## Cross-Referenced Evidence — Why This Is One Campaign, Not Several
+## Cross-Referenced Evidence-Why This Is One Campaign, Not Several
 
 The single strongest piece of evidence in this investigation is that **source IP `45.137.21.88` appears in three independently-discovered findings**:
 
