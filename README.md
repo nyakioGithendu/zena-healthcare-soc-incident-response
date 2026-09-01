@@ -2,8 +2,8 @@
 
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
 
-> ⚠️ **This is a simulated exercise.** ZENA Healthcare is a fictional
-> organization created for training purposes. No real patient data,
+> **This is a simulated exercise.** ZENA Healthcare is an organization
+> created for training purposes. No real patient data,
 > systems, or breach occurred. This project demonstrates SOC analyst
 > skills using Microsoft Sentinel, Defender XDR, and MITRE ATT&CK
 > methodology in a controlled training environment.
