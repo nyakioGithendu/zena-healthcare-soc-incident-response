@@ -56,7 +56,7 @@ regulatory notification.
 
 ## Key Findings So Far
 
-**Phase 2 — Alert Triage**
+**Phase 2 Alert Triage**
 - Validated the Sentinel feed before triaging: found 277 ingested rows
   against 275 unique Alert IDs, a connector duplication issue
   (`AL-1048`, `AL-1049`), resolved before calculating any metrics.
@@ -85,21 +85,21 @@ regulatory notification.
   event timestamp under a separate field (`AlertTimeGenerated`) and
   using it for all chronological analysis instead.
 
-**Phase 3 — Cloud Identity Investigation**
+**Phase 3 Cloud Identity Investigation**
 - Confirmed the `j.okeefe` account compromise via Entra ID sign-in logs:
   a 9-prompt MFA-fatigue (push-bombing) burst over 36 minutes, followed
   by a successful sign-in "after repeated MFA prompts" from Rotterdam,
-  NL — the same night as the account's last legitimate Manchester
+  NL-the same night as the account's last legitimate Manchester
   sign-in.
 - **Quantified the impossible-travel finding directly in KQL**, using
   `prev()`/`datetime_diff()` to calculate the exact gap between the
-  legitimate and compromised sign-ins: **46 minutes** across ~600km —
+  legitimate and compromised sign-ins: **46 minutes** across ~600km-
   physically impossible by any mode of travel, turning a system-flagged
   alert into a mathematically proven finding.
 - Independently verified a second, superficially similar "impossible
   travel" flag on `a.shah` and confirmed it as a genuine false
-  positive — `RiskState: dismissed`, normal MFA satisfaction, no
-  fatigue pattern, no follow-on suspicious activity — rather than
+  positive-`RiskState: dismissed`, normal MFA satisfaction, no
+  fatigue pattern, no follow-on suspicious activity-rather than
   accepting the prior analyst's handover note at face value.
 - Resolved an open question from the handover notes: `SVC-epr-sync`
   (normally a certificate-based, non-interactive automation account)
@@ -109,7 +109,7 @@ regulatory notification.
   privilege escalation, ~26 hours after the initial compromise.
 - **Cross-account correlation:** the source IP `45.137.21.88` links the
   `j.okeefe` compromise, the `SVC-epr-sync` privilege escalation, *and*
-  the `IMG-WS-07` workstation intrusion from Phase 2 — confirming one
+  the `IMG-WS-07` workstation intrusion from Phase 2 confirming one
   coordinated attack campaign, not several unrelated incidents.
 - Produced a board-ready Identity Investigation Report (executive
   summary, timeline, risk assessment, affected-user breakdown, and
@@ -131,7 +131,7 @@ regulatory notification.
   and executes a second-stage payload from a C2 domain (**T1105**,
   Ingress Tool Transfer), creates a scheduled task `UpdaterSvc` for
   persistence (**T1053.005**), and invokes **Mimikatz** to dump
-  credentials from memory (**T1003.001**) — independently corroborated
+  credentials from memory (**T1003.001**)-independently corroborated
   by a separate Defender identity alert (LSASS memory access) 70
   minutes later.
 - Identified the C2 domain (`sync-update-cdn.net`, resolving to
@@ -142,17 +142,17 @@ regulatory notification.
   activity), while the packet capture (Wireshark) surfaced the live
   `GET /a.ps1` HTTP request and its **User-Agent** —
   `ZenaUpd/1.0 (PowerShell)`, a custom string designed to impersonate a
-  legitimate internal updater service — a detail the flow-log CSV has no
+  legitimate internal updater service-a detail the flow-log CSV has no
   field to capture at all.
 - **Threat-intel enrichment returned zero detections** on both the
-  domain (VirusTotal) and the IP (AbuseIPDB) — documented as an expected
+  domain (VirusTotal) and the IP (AbuseIPDB)-documented as an expected
   result for first-use/simulated attacker infrastructure rather than
   evidence of benign intent; confidence in the finding rests on
   first-party evidence (the decode, Defender alerts, and beacon pattern)
   rather than third-party reputation history.
 - Flagged a single anomalous 41.2MB outbound transfer to the same C2 IP
-  from a second host (`10.10.4.30`) — consistent with the Phase 2
-  Sentinel-vs-Splunk exfiltration discrepancy — carried forward as an
+  from a second host (`10.10.4.30`)-consistent with the Phase 2
+  Sentinel-vs-Splunk exfiltration discrepancy-carried forward as an
   open item for Phase 5's network hunting.
 - Produced a Malware Investigation Report (PowerShell Analysis Note)
   covering payload behaviour, C2 identification, beacon cadence, the
@@ -161,7 +161,7 @@ regulatory notification.
 
 ## Investigation Timeline
 
-_Full chronological account in [incident-timeline.md](./incident-timeline.md) — being built out phase by phase._
+_Full chronological account in [incident-timeline.md](./incident-timeline.md)-being built out phase by phase._
 
 ## Alert Triage
 
