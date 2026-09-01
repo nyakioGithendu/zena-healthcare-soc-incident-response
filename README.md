@@ -49,7 +49,7 @@ regulatory notification.
 | Phase 1 — Business onboarding & regulatory knowledge checks | ✅ Complete |
 | Phase 2 — SIEM data validation & alert triage | ✅ Complete |
 | Phase 3 — Cloud identity investigation | ✅ Complete |
-| Phase 4 — Malware & threat intelligence analysis | ⬜ Not started |
+| Phase 4 — Malware & threat intelligence analysis | ✅ Complete |
 | Phase 5 — Threat hunting & MITRE ATT&CK mapping | ⬜ Not started |
 | Phase 6 — Confirmed-incident response & ServiceNow | ⬜ Not started |
 | Phase 7 — KPI reporting, remediation, lessons learned | ⬜ Not started |
@@ -121,6 +121,44 @@ regulatory notification.
   (Credential Access, Privilege Escalation, Command and Control,
   Exfiltration) ahead of the formal mapping in Phase 5.
 
+**Phase 4 — Malware & Threat Intelligence Investigation**
+- Decoded the encoded PowerShell payload from `IMG-WS-07` (Defender
+  alert DE-9001) via CyberChef — Base64 decode followed by a UTF-16LE
+  text decode, since PowerShell's `-EncodedCommand` flag always encodes
+  UTF-16LE, not plain ASCII.
+- The decoded command performs three distinct actions, each named and
+  mapped individually rather than summarized as "malicious": downloads
+  and executes a second-stage payload from a C2 domain (**T1105**,
+  Ingress Tool Transfer), creates a scheduled task `UpdaterSvc` for
+  persistence (**T1053.005**), and invokes **Mimikatz** to dump
+  credentials from memory (**T1003.001**) — independently corroborated
+  by a separate Defender identity alert (LSASS memory access) 70
+  minutes later.
+- Identified the C2 domain (`sync-update-cdn.net`, resolving to
+  `45.137.21.88`) and confirmed genuine command-and-control behaviour by
+  cross-referencing **two independent data sources**: network flow logs
+  showed 30+ near-identical connections at a consistent **~15-minute
+  interval** over 9+ hours (proving automated beaconing, not human
+  activity), while the packet capture (Wireshark) surfaced the live
+  `GET /a.ps1` HTTP request and its **User-Agent** —
+  `ZenaUpd/1.0 (PowerShell)`, a custom string designed to impersonate a
+  legitimate internal updater service — a detail the flow-log CSV has no
+  field to capture at all.
+- **Threat-intel enrichment returned zero detections** on both the
+  domain (VirusTotal) and the IP (AbuseIPDB) — documented as an expected
+  result for first-use/simulated attacker infrastructure rather than
+  evidence of benign intent; confidence in the finding rests on
+  first-party evidence (the decode, Defender alerts, and beacon pattern)
+  rather than third-party reputation history.
+- Flagged a single anomalous 41.2MB outbound transfer to the same C2 IP
+  from a second host (`10.10.4.30`) — consistent with the Phase 2
+  Sentinel-vs-Splunk exfiltration discrepancy — carried forward as an
+  open item for Phase 5's network hunting.
+- Produced a Malware Investigation Report (PowerShell Analysis Note)
+  covering payload behaviour, C2 identification, beacon cadence, the
+  PCAP-only User-Agent evidence, and why both the PCAP and flow logs
+  were required together.
+
 ## Investigation Timeline
 
 _Full chronological account in [incident-timeline.md](./incident-timeline.md) — being built out phase by phase._
@@ -128,6 +166,20 @@ _Full chronological account in [incident-timeline.md](./incident-timeline.md) �
 ## Alert Triage
 
 Full triage register and methodology in [/evidence](./evidence).
+
+## IOC Register
+
+Full register with source, confidence, and enrichment evidence in
+[/evidence/ioc-register.md](./evidence/ioc-register.md).
+
+| IOC Type | Value | Severity | Confidence |
+|---|---|---|---|
+| Domain | `sync-update-cdn.net` | Critical | High |
+| IP | `45.137.21.88` | Critical | High |
+| File Hash | `9f2a4c8e1b7d3f6a0c5e9b2d8f4a1c7e3b6d9f0a2c5e8b1d4f7a0c3e6b9d2f5a` | High | Medium |
+| URL | `http://sync-update-cdn.net/a.ps1` | Critical | High |
+| Scheduled Task | `UpdaterSvc` | High | High |
+| User-Agent | `ZenaUpd/1.0 (PowerShell)` | High | High |
 
 ## MITRE ATT&CK Mapping
 
@@ -141,10 +193,13 @@ mapping to be finalized in Phase 5.
 | Sign-in via anonymising proxy | Defense Evasion | External Proxy | T1090.002 |
 | SVC-epr-sync interactive sign-in | Privilege Escalation | Valid Accounts: Cloud Accounts | T1078.004 |
 | Helpdesk Admin role grant | Privilege Escalation | Account Manipulation | T1098.003 |
-| Encoded PowerShell on IMG-WS-07 | Execution | PowerShell | T1059.001 |
-| LSASS access on IMG-WS-07 | Credential Access | OS Credential Dumping | T1003.001 |
-| Shared C2 IP across 3 findings | Command and Control | Application Layer Protocol | T1071 |
-| Attempted outbound transfer | Exfiltration | Exfiltration Over C2 Channel | T1041 |
+| Encoded PowerShell on IMG-WS-07 (decoded, confirmed) | Execution | PowerShell | T1059.001 |
+| Second-stage payload download (`a.ps1`) | Execution | Ingress Tool Transfer | T1105 |
+| `UpdaterSvc` scheduled task | Persistence | Scheduled Task/Job | T1053.005 |
+| Mimikatz credential dump | Credential Access | OS Credential Dumping (LSASS) | T1003.001 |
+| DCSync against krbtgt (SVC-epr-sync → DC-01) | Credential Access | OS Credential Dumping: DCSync | T1003.006 |
+| Beaconing to `sync-update-cdn.net` (confirmed via PCAP + flow logs) | Command and Control | Application Layer Protocol | T1071.001 |
+| Attempted 41.2MB outbound transfer | Exfiltration | Exfiltration Over C2 Channel | T1041 |
 
 ## KQL Queries
 
