@@ -45,14 +45,14 @@ regulatory notification.
 
 | Phase | Status |
 |---|---|
-| Phase 0 — Tooling & environment setup | ✅ Complete |
-| Phase 1 — Business onboarding & regulatory knowledge checks | ✅ Complete |
-| Phase 2 — SIEM data validation & alert triage | ✅ Complete |
-| Phase 3 — Cloud identity investigation | ✅ Complete |
-| Phase 4 — Malware & threat intelligence analysis | ✅ Complete |
-| Phase 5 — Threat hunting & MITRE ATT&CK mapping | ⬜ Not started |
-| Phase 6 — Confirmed-incident response & ServiceNow | ⬜ Not started |
-| Phase 7 — KPI reporting, remediation, lessons learned | ⬜ Not started |
+| Phase 0 Tooling & environment setup | ✅ Complete |
+| Phase 1 Business onboarding & regulatory knowledge checks | ✅ Complete |
+| Phase 2 SIEM data validation & alert triage | ✅ Complete |
+| Phase 3 Cloud identity investigation | ✅ Complete |
+| Phase 4 Malware & threat intelligence analysis | ✅ Complete |
+| Phase 5 Threat hunting & MITRE ATT&CK mapping | ⬜ Not started |
+| Phase 6 Confirmed-incident response & ServiceNow | ⬜ Not started |
+| Phase 7 KPI reporting, remediation, lessons learned | ⬜ Not started |
 
 ## Key Findings So Far
 
@@ -66,7 +66,7 @@ regulatory notification.
 - Full triage of the 275-alert backlog produced a 31.3% true-positive
   rate. Within that, distinguished 68 routine/low-severity true
   positives from **18 alerts forming a single, unbroken attack
-  narrative** — phishing → credential harvesting → MFA fatigue →
+  narrative**-phishing → credential harvesting → MFA fatigue →
   privilege escalation → lateral movement toward the EPR tier → data
   staging → attempted exfiltration → C2 beaconing.
 - Identified a cross-SIEM discrepancy: Sentinel and Splunk disagree on
